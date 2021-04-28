@@ -10,7 +10,7 @@ public class RootModel {
     @SerializedName("to")
     private final String topic;
 
-    @SerializedName("notification")
+    @SerializedName("data")
     private final NotificationModel notification = new NotificationModel();
 
     public RootModel(String topic, String title, String message) {
