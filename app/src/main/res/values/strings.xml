@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ArrowAdmin</string>
+    <string name="enter_title">Enter Title</string>
+    <string name="enter_message">Enter Message</string>
+    <string name="send_announcement">Send Announcement</string>
+
+    <!-- Array of channel entries for FCM topic spinner
+    Update MainActivity class buildMessage() if updating here-->
+    <string-array name="fcm_topics_array">
+        <item>ArrowOS</item>
+        <item>Device Specific</item>
+    </string-array>
 </resources>

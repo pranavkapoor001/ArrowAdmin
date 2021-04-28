@@ -20,6 +20,11 @@ public class FirebaseService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.e(TAG, "Message received");
+        Log.d(TAG, "Message received: ");
+
+        if (remoteMessage.getNotification() != null) {
+            Log.e(TAG, "Message Title: " + remoteMessage.getNotification().getTitle());
+            Log.e(TAG, "Message Body: " + remoteMessage.getNotification().getBody());
+        }
     }
 }

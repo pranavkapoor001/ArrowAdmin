@@ -2,76 +2,57 @@ package com.pk.arrowadmin;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.pk.arrowadmin.Utils.FirebaseUtils;
 import com.pk.arrowadmin.retrofit.FirebaseApi;
-import com.pk.arrowadmin.retrofit.NotificationModel;
-import com.pk.arrowadmin.retrofit.RetrofitService;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
-    private FirebaseApi firebaseApi;
+    // Vars
+    private FirebaseUtils firebaseUtils;
+
+    // UI Components
     private EditText etTitle, etMessage;
+    private Spinner topicsSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Get views
         etTitle = findViewById(R.id.input_title);
         etMessage = findViewById(R.id.input_message);
-
-
-        // THIS GIVES 'X00T', now we can subscribe to topic
-        Log.e(TAG, "DEVICE: " + Build.DEVICE);
-
-        initRetrofit();
-
         Button btnSendMessage = findViewById(R.id.send_message);
+        topicsSpinner = findViewById(R.id.fcm_topic_spinner);
+
+        // Firebase subscribe
+        firebaseUtils = new FirebaseUtils();
+        firebaseUtils.subscribeToDevice();
+        firebaseUtils.subscribeToArrow();
+
+        // onClick listener for send notification
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMessage();
+                buildMessage();
             }
         });
     }
 
-    private void initRetrofit() {
-
-        Retrofit retrofit = RetrofitService.getInstance();
-        firebaseApi = retrofit.create(FirebaseApi.class);
-
-
-        FirebaseMessaging.getInstance().subscribeToTopic(FirebaseApi.UNIVERSAL_TOPIC)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (!task.isSuccessful()) {
-                            Log.e(TAG, "subscribe to topic failed!");
-                        } else
-                            Log.e(TAG, "subscribe to topic successful!");
-                    }
-                });
-    }
-
-    private void sendMessage() {
+    /**
+     * Gets notification title and message from user
+     * and sends message via {@link FirebaseUtils#sendMessage(String, String, String)}
+     */
+    private void buildMessage() {
+        // Get title and message
 
         String title = etTitle.getText().toString();
         String message = etMessage.getText().toString();
@@ -80,24 +61,15 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        // Get selected topic
+        String topic;
+        if (topicsSpinner.getSelectedItemPosition() == 0)
+            topic = FirebaseApi.ARROW_TOPIC;
+        else
+            topic = Build.DEVICE;
 
-        firebaseApi.sendNotification(new NotificationModel(FirebaseApi.UNIVERSAL_TOPIC, title, message)).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        // Send message
+        firebaseUtils.sendMessage(topic, title, message);
 
-                Log.e(TAG, "onResponse: URL: " + call.request().url());
-
-
-                if (response.isSuccessful())
-                    Log.e(TAG, "onResponse: call successful");
-                else
-                    Log.e(TAG, "onResponse: call failed! CODE: " + response.code());
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e(TAG, "onFailure: call failed! " + t.getMessage());
-            }
-        });
     }
 }

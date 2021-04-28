@@ -6,21 +6,34 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/input_title"
+    <Spinner
+        android:id="@+id/fcm_topic_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:padding="16dp"
-        android:text="Enter Title" />
+        android:layout_marginTop="15dp"
+        android:entries="@array/fcm_topics_array"
+        android:padding="16dp" />
+
+    <EditText
+        android:id="@+id/input_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:hint="@string/enter_title"
+        android:padding="16dp" />
 
     <EditText
         android:id="@+id/input_message"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:padding="16dp"
-        android:text="Enter Message" />
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:hint="@string/enter_message"
+        android:padding="16dp" />
 
     <Button
         android:id="@+id/send_message"
@@ -28,6 +41,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:padding="16dp"
-        android:text="Send message" />
+        android:text="@string/send_announcement" />
 
 </LinearLayout>

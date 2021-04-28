@@ -10,9 +10,9 @@ import retrofit2.http.POST;
 
 public interface FirebaseApi {
     String BASE_URL = "https://fcm.googleapis.com/";
-    String UNIVERSAL_TOPIC = "/topics/ArrowOS";
+    String ARROW_TOPIC = "/topics/ArrowOS";
 
     @Headers({"Authorization: key=" + BuildConfig.SERVER_KEY, "Content-Type:application/json"})
     @POST("fcm/send")
-    Call<ResponseBody> sendNotification(@Body NotificationModel root);
+    Call<ResponseBody> sendNotification(@Body RootModel root);
 }
