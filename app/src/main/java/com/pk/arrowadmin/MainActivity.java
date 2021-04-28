@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Firebase subscribe
         firebaseUtils = new FirebaseUtils();
-        firebaseUtils.subscribeToDevice();
-        firebaseUtils.subscribeToArrow();
 
         // onClick listener for send notification
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
