@@ -1,7 +1,8 @@
 package com.pk.arrowadmin.Utils;
 
-import android.os.Build;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -33,14 +34,14 @@ public class FirebaseUtils {
      * Subscribes to device topic with device codename to receive messages from FCM
      */
     public void subscribeToDevice() {
-        FirebaseMessaging.getInstance().subscribeToTopic(Build.DEVICE)
+        FirebaseMessaging.getInstance().subscribeToTopic(FirebaseApi.DEVICE_TOPIC)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
                             Log.e(TAG, "subscribeToDevice: failed!");
                         } else
-                            Log.d(TAG, "subscribeToDevice: successful: " + Build.DEVICE);
+                            Log.d(TAG, "subscribeToDevice: successful: " + FirebaseApi.DEVICE_TOPIC);
                     }
                 });
     }
@@ -68,14 +69,17 @@ public class FirebaseUtils {
      * @param title   Title for notification
      * @param message Message for notification
      */
-    public void sendMessage(String topic, String title, String message) {
+    public void sendMessage(Context context, String topic, String title, String message) {
         firebaseApi.sendNotification(new RootModel(topic, title, message)).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                if (response.isSuccessful())
+                if (response.isSuccessful()) {
                     Log.d(TAG, "onResponse: call successful");
-                else
+                    showToast("Message sent successfully", context);
+                } else {
                     Log.e(TAG, "onResponse: call failed! CODE: " + response.code());
+                    showToast("Failed to send message!", context);
+                }
             }
 
             @Override
@@ -83,5 +87,15 @@ public class FirebaseUtils {
                 Log.e(TAG, "onFailure: call failed! " + t.getMessage());
             }
         });
+    }
+
+    /**
+     * Displays a SnackBar after sending message through FCM
+     *
+     * @param info    Display message
+     * @param context Context for Toast
+     */
+    private void showToast(String info, Context context) {
+        Toast.makeText(context, info, Toast.LENGTH_LONG).show();
     }
 }

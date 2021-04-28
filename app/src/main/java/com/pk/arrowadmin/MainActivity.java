@@ -1,6 +1,6 @@
 package com.pk.arrowadmin;
 
-import android.os.Build;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Gets notification title and message from user
-     * and sends message via {@link FirebaseUtils#sendMessage(String, String, String)}
+     * and sends message via {@link FirebaseUtils#sendMessage(Context, String, String, String)}
      */
     private void buildMessage() {
         // Get title and message
@@ -66,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
         if (topicsSpinner.getSelectedItemPosition() == 0)
             topic = FirebaseApi.ARROW_TOPIC;
         else
-            topic = Build.DEVICE;
+            topic = FirebaseApi.DEVICE_TOPIC;
 
         // Send message
-        firebaseUtils.sendMessage(topic, title, message);
+        firebaseUtils.sendMessage(this, topic, title, message);
 
     }
 }

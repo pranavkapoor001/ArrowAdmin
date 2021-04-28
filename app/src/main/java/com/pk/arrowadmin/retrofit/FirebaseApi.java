@@ -1,5 +1,7 @@
 package com.pk.arrowadmin.retrofit;
 
+import android.os.Build;
+
 import com.pk.arrowadmin.BuildConfig;
 
 import okhttp3.ResponseBody;
@@ -11,6 +13,7 @@ import retrofit2.http.POST;
 public interface FirebaseApi {
     String BASE_URL = "https://fcm.googleapis.com/";
     String ARROW_TOPIC = "/topics/ArrowOS";
+    String DEVICE_TOPIC = "/topics/" + Build.DEVICE;
 
     @Headers({"Authorization: key=" + BuildConfig.SERVER_KEY, "Content-Type:application/json"})
     @POST("fcm/send")
